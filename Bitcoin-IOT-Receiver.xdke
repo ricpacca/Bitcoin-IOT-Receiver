@@ -15,8 +15,13 @@
         "name": "Bitcoin-IOT-Receiver.xdk"
       },
       "Bitcoin-IOT-Receiver.xdke": {
+<<<<<<< HEAD
         "previousModTime": 1446306149562,
         "modified": 1446306149562,
+=======
+        "previousModTime": 1446304029217,
+        "modified": 1446304029217,
+>>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
         "seen": true,
         "name": "Bitcoin-IOT-Receiver.xdke"
       },
@@ -27,8 +32,13 @@
         "name": "icon.png"
       },
       "main.js": {
+<<<<<<< HEAD
         "previousModTime": 1446306173745,
         "modified": 1446306173745,
+=======
+        "previousModTime": 1446304028609,
+        "modified": 1446304028609,
+>>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
         "seen": true,
         "name": "main.js"
       },
@@ -39,8 +49,13 @@
         "name": "package.json"
       },
       "README.md": {
+<<<<<<< HEAD
         "previousModTime": 1446304071720,
         "modified": 1446304071720,
+=======
+        "previousModTime": 1446303628047,
+        "modified": 1446303628047,
+>>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
         "seen": true,
         "name": "README.md"
       },
@@ -51,10 +66,14 @@
         "name": "xdk/project-info.json"
       }
     },
+<<<<<<< HEAD
     "boardFileStatus": {
       "main.js": {
         "previousModTime": 1446306175498
       }
     }
+=======
+    "boardFileStatus": {}
+>>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
   }
 }
