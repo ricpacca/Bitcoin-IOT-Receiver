@@ -8,6 +8,8 @@ var _       = require('underscore')    // docs: http://underscorejs.org/
 var bitcoin = require('bitcoinjs-lib')
 var fs =      require('fs');
 var qr = require('qr-image');  
+var getPixels = require("get-pixels")
+
 var addr2watch
 
 
@@ -73,13 +75,29 @@ var main = function() {
 
   addr2watch = generate_key();
     
-  var code = qr.image(addr2watch, { type: 'svg' });  
-  var output = fs.createWriteStream('qr-code-bitcoin-address.svg')
-
+  var code = qr.image(addr2watch, { type: 'png' });  
+  var output = fs.createWriteStream('address.png');
   code.pipe(output);
-  
+    
+  //_.delay(get_pixels, loop_time)
+
   console.log("BitEdison initialized - v0.1.0 - watching address:", addr2watch)
   check_balance();
+}
+
+function get_pixels() {
+  getPixels("/opt/xdk-daemon/address.png", function(err, pixels) {
+  if(err) {
+    console.log("Bad image path")
+    return
+  }
+    console.log("got pixels", pixels.shape.slice())
+    
+    var arrayLength = pixels.length;
+    for (var i = 0; i < arrayLength; i+=4) {
+        
+    }
+  })
 }
 
 function generate_key() {
@@ -90,9 +108,9 @@ function generate_key() {
     
     /**
     fs.writeFile(publicKey, privateKey, function (err) {
-  if (err) return console.log(err);
-  console.log('unable to file');
-});
+      if (err) return console.log(err);
+      console.log('unable to file');
+    });
     **/
     
     return pub;
