@@ -6,7 +6,7 @@ var mraa    = require('mraa');
 var request = require('request') // https://github.com/request/request
 var _       = require('underscore')    // docs: http://underscorejs.org/
 var bitcoin = require('bitcoinjs-lib')
-var fs = require('fs');
+var fs =      require('fs');
 
 
 //var addr2watch  = '1PzTDHe2GKjv2sHHKoN4Gbu2njLtekkYHh' // bitcoin address to watch 
@@ -20,10 +20,11 @@ var reset_after = 30 // seconds
 
 var check_balance = function(addr2watch){
   // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
-  request('https://blockchain.info/q/addressbalance/'+addr2watch, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var satoshi = parseInt(body)
-      var btc = satoshi*Math.pow(10, -8)
+  request('https://blockchain.info/q/addressbalance/'+addr2watch,
+          function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var satoshi = parseInt(body)
+                    var btc = satoshi*Math.pow(10, -8)
       
       // this is the simplest approach, just check if the balance if different
       // you could check if the price is increased by X amount or better if you got a transaction exactly of x btc

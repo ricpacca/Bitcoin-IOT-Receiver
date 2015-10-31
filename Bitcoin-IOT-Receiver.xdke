@@ -9,51 +9,51 @@
   "iot-tab": {
     "fileStatus": {
       "Bitcoin-IOT-Receiver.xdk": {
-        "previousModTime": 1446303112840,
-        "modified": 1446303112840,
+        "previousModTime": 1446304071705,
+        "modified": 1446304071705,
         "seen": true,
         "name": "Bitcoin-IOT-Receiver.xdk"
       },
       "Bitcoin-IOT-Receiver.xdke": {
-        "previousModTime": 1446306530387,
-        "modified": 1446306530387,
+        "previousModTime": 1446306672995,
+        "modified": 1446306672995,
         "seen": true,
         "name": "Bitcoin-IOT-Receiver.xdke"
       },
       "icon.png": {
-        "previousModTime": 1446303112616,
-        "modified": 1446303112616,
+        "previousModTime": 1446304071720,
+        "modified": 1446304071720,
         "seen": true,
         "name": "icon.png"
       },
       "main.js": {
-        "previousModTime": 1446306591237,
-        "modified": 1446306591237,
+        "previousModTime": 1446306672995,
+        "modified": 1446306672995,
         "seen": true,
         "name": "main.js"
       },
       "package.json": {
-        "previousModTime": 1446303112617,
-        "modified": 1446303112617,
+        "previousModTime": 1446304071736,
+        "modified": 1446304071736,
         "seen": true,
         "name": "package.json"
       },
       "README.md": {
-        "previousModTime": 1446303628047,
-        "modified": 1446303628047,
+        "previousModTime": 1446304071720,
+        "modified": 1446304071720,
         "seen": true,
         "name": "README.md"
       },
       "xdk/project-info.json": {
-        "previousModTime": 1446303112816,
-        "modified": 1446303112816,
+        "previousModTime": 1446304071736,
+        "modified": 1446304071736,
         "seen": true,
         "name": "xdk/project-info.json"
       }
     },
     "boardFileStatus": {
       "main.js": {
-        "previousModTime": 1446306594498
+        "previousModTime": 1446306683753
       }
     }
   }
