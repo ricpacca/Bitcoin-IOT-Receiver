@@ -7,6 +7,7 @@ var request = require('request') // https://github.com/request/request
 var _       = require('underscore')    // docs: http://underscorejs.org/
 var bitcoin = require('bitcoinjs-lib')
 var fs =      require('fs');
+var qr = require('qr-image');  
 var addr2watch
 
 
@@ -71,6 +72,11 @@ var main = function() {
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
 
   addr2watch = generate_key();
+    
+  var code = qr.image(addr2watch, { type: 'svg' });  
+  var output = fs.createWriteStream('qr-code-bitcoin-address.svg')
+
+  code.pipe(output);
   
   console.log("BitEdison initialized - v0.1.0 - watching address:", addr2watch)
   check_balance();
@@ -90,7 +96,6 @@ function generate_key() {
     **/
     
     return pub;
-    
 }
 
 main()
