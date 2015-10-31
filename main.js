@@ -5,8 +5,11 @@
 var mraa    = require('mraa');     
 var request = require('request') // https://github.com/request/request
 var _       = require('underscore')    // docs: http://underscorejs.org/
+var bitcoin = require('bitcoinjs-lib')
+var fs = require('fs');
 
-var addr2watch  = '1PzTDHe2GKjv2sHHKoN4Gbu2njLtekkYHh' // bitcoin address to watch 
+
+//var addr2watch  = '1PzTDHe2GKjv2sHHKoN4Gbu2njLtekkYHh' // bitcoin address to watch 
 var loop_time   = 1000  // ms   (check every second)
 var balance     = null
 var relayPin    = new mraa.Gpio(12)
@@ -15,7 +18,7 @@ var light_is_on = false
 
 var reset_after = 30 // seconds
 
-var check_balance = function(){
+var check_balance = function(addr2watch){
   // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
   request('https://blockchain.info/q/addressbalance/'+addr2watch, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -38,7 +41,7 @@ var check_balance = function(){
       light_is_on = false;
     }
     
-    _.delay(check_balance, loop_time) // this is like setTimeout(check_balance, loop_Time)
+    //_.delay(check_balance, loop_time,addr2watch) // this is like setTimeout(check_balance, loop_Time)
   })
 }
 
@@ -54,16 +57,35 @@ var main = function() {
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
   
-  console.log("BitEdison initialized - v0.1.0 - watching address:", addr2watch)
-  
   var lcd = require('jsupm_i2clcd');
   var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
-  display.setCursor(1, 1);
-  display.write('hi there');
   display.setCursor(0,0);
+  display.write('hi there');
+    
+  var public_key = generate_key();
   
-  check_balance()
+  console.log("BitEdison initialized - v0.1.0 - watching address:", public_key)
+  check_balance(public_key);      
+  
 }
 
+function generate_key()
+{
+    var keyPair = bitcoin.ECPair.makeRandom()
+    var pub = keyPair.getAddress();
+    var priv = keyPair.toWIF();
+    
+    
+    /**
+    fs.writeFile(publicKey, privateKey, function (err) {
+  if (err) return console.log(err);
+  console.log('unable to file');
+});
+    **/
+    
+    return pub;
+    
+    
+}
 
 main()
