@@ -18,8 +18,7 @@ var light_is_on = false
 
 var reset_after = 30 // seconds
 
-var check_balance = function(addr2watch){
-  // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
+var check_balance = function(addr2watch) {
   request('https://blockchain.info/q/addressbalance/'+addr2watch, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       var satoshi = parseInt(body)
@@ -35,13 +34,12 @@ var check_balance = function(addr2watch){
         
       balance = btc
     }
+      
     if (reset_loops >= reset_after) {
       reset_loops = 0;
       relayPin.write(1);
       light_is_on = false;
     }
-    
-    //_.delay(check_balance, loop_time,addr2watch) // this is like setTimeout(check_balance, loop_Time)
   })
 }
 
@@ -66,11 +64,10 @@ var main = function() {
   var public_key = generate_key();
   
   console.log("BitEdison initialized - v0.1.0 - watching address:", public_key)
-  check_balance(public_key);
+  //check_balance(public_key);
 }
 
-function generate_key()
-{
+function generate_key() {
     var keyPair = bitcoin.ECPair.makeRandom()
     var pub = keyPair.getAddress();
     var priv = keyPair.toWIF();
@@ -84,7 +81,6 @@ function generate_key()
     **/
     
     return pub;
-    
     
 }
 
