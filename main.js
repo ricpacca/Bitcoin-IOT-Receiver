@@ -58,9 +58,8 @@ var main = function() {
   
   var lcd = require('jsupm_i2clcd');
   var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
-  display.setCursor(1, 1);
+  display.setCursor(0, 0);
   display.write('hi there');
-  display.setCursor(0,0);
   
   check_balance()
 }
