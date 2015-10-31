@@ -15,8 +15,8 @@
         "name": "Bitcoin-IOT-Receiver.xdk"
       },
       "Bitcoin-IOT-Receiver.xdke": {
-        "previousModTime": 1446324866183,
-        "modified": 1446324866183,
+        "previousModTime": 1446324965992,
+        "modified": 1446324965992,
         "seen": true,
         "name": "Bitcoin-IOT-Receiver.xdke"
       },
@@ -27,8 +27,8 @@
         "name": "icon.png"
       },
       "main.js": {
-        "previousModTime": 1446324963850,
-        "modified": 1446324963850,
+        "previousModTime": 1446326466565,
+        "modified": 1446326466565,
         "seen": true,
         "name": "main.js"
       },
@@ -52,8 +52,20 @@
       }
     },
     "boardFileStatus": {
+      "icon.png": {
+        "previousModTime": 1446326468392
+      },
       "main.js": {
-        "previousModTime": 1446324965934
+        "previousModTime": 1446326468392
+      },
+      "package.json": {
+        "previousModTime": 1446326468392
+      },
+      "README.md": {
+        "previousModTime": 1446326468392
+      },
+      "xdk/project-info.json": {
+        "previousModTime": 1446326468392
       }
     }
   }

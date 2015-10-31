@@ -7,8 +7,7 @@ var request = require('request') // https://github.com/request/request
 var _       = require('underscore')    // docs: http://underscorejs.org/
 var bitcoin = require('bitcoinjs-lib')
 var fs =      require('fs');
-var qr = require('qr-image');  
-var getPixels = require("get-pixels")
+var qr = require('qr-image'); 
 
 var addr2watch
 
@@ -35,14 +34,17 @@ var check_balance = function(){
       
       // this is the simplest approach, just check if the balance if different
       // you could check if the price is increased by X amount or better if you got a transaction exactly of x btc
-      if (balance && balance != btc)
-        activate()
+      if (balance && balance != btc) {
+        payment_received()
+        return
+      }
       
       if (light_is_on) 
         reset_loops += 1
         
       balance = btc
     }
+      
     if (reset_loops >= reset_after) {
       reset_loops = 0;
       relayPin.write(1);
@@ -61,43 +63,19 @@ var check_balance = function(){
   })
 }
 
-var activate = function() {
+var payment_received = function() {
   console.log("Address balance changed, new one is:", balance, "BTC")
-  console.log("Let there be light!")
-  light_is_on = true
-  relayPin.write(0) // set the relay pin to low, this will trigger the relay!
 }
 
-var main = function() {
-  console.log('MRAA Version: ' + mraa.getVersion());
-  relayPin.dir(mraa.DIR_OUT);
-  relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
+function initialise_receiver() {
+    addr2watch = generate_key();
 
-  addr2watch = generate_key();
+    var code = qr.image(addr2watch, { type: 'png' });  
+    var output = fs.createWriteStream('address.png');
+    code.pipe(output);
     
-  var code = qr.image(addr2watch, { type: 'png' });  
-  var output = fs.createWriteStream('address.png');
-  code.pipe(output);
-    
-  //_.delay(get_pixels, loop_time)
-
-  console.log("BitEdison initialized - v0.1.0 - watching address:", addr2watch)
-  check_balance();
-}
-
-function get_pixels() {
-  getPixels("/opt/xdk-daemon/address.png", function(err, pixels) {
-  if(err) {
-    console.log("Bad image path")
-    return
-  }
-    console.log("got pixels", pixels.shape.slice())
-    
-    var arrayLength = pixels.length;
-    for (var i = 0; i < arrayLength; i+=4) {
-        
-    }
-  })
+    console.log("Watching address:", addr2watch);
+    check_balance();
 }
 
 function generate_key() {
@@ -114,6 +92,14 @@ function generate_key() {
     **/
     
     return pub;
+}
+
+var main = function() {
+  console.log('MRAA Version: ' + mraa.getVersion());
+  relayPin.dir(mraa.DIR_OUT);
+  relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
+
+  initialise_receiver();
 }
 
 main()
