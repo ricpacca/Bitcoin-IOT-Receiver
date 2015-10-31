@@ -7,6 +7,7 @@ var request = require('request') // https://github.com/request/request
 var _       = require('underscore')    // docs: http://underscorejs.org/
 var bitcoin = require('bitcoinjs-lib')
 var fs =      require('fs');
+var addr2watch
 
 
 //var addr2watch  = '1PzTDHe2GKjv2sHHKoN4Gbu2njLtekkYHh' // bitcoin address to watch 
@@ -16,15 +17,18 @@ var relayPin    = new mraa.Gpio(12)
 var reset_loops = 0
 var light_is_on = false
 
-var reset_after = 30 // seconds
+var lcd = require('jsupm_i2clcd');
+var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
 
-var check_balance = function(addr2watch){
+var reset_after = 30 // seconds
+var i = 0
+
+var check_balance = function(){
   // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
-  request('https://blockchain.info/q/addressbalance/'+addr2watch,
-          function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    var satoshi = parseInt(body)
-                    var btc = satoshi*Math.pow(10, -8)
+  request('https://blockchain.info/q/addressbalance/'+addr2watch, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var satoshi = parseInt(body)
+      var btc = satoshi*Math.pow(10, -8)
       
       // this is the simplest approach, just check if the balance if different
       // you could check if the price is increased by X amount or better if you got a transaction exactly of x btc
@@ -36,12 +40,21 @@ var check_balance = function(addr2watch){
         
       balance = btc
     }
-      
     if (reset_loops >= reset_after) {
       reset_loops = 0;
       relayPin.write(1);
       light_is_on = false;
     }
+    
+    if (i==17) {
+        i=0;
+        display.clear();
+    }
+      
+    display.setCursor(0,i++);
+    display.write('-');
+      
+    _.delay(check_balance, loop_time) // this is like setTimeout(check_balance, loop_Time)
   })
 }
 
@@ -56,17 +69,11 @@ var main = function() {
   console.log('MRAA Version: ' + mraa.getVersion());
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
-  
-  var lcd = require('jsupm_i2clcd');
-  var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
 
-  display.setCursor(0,0);
-  display.write('hi there');
-    
-  var public_key = generate_key();
+  addr2watch = generate_key();
   
-  console.log("BitEdison initialized - v0.1.0 - watching address:", public_key)
-  //check_balance(public_key);
+  console.log("BitEdison initialized - v0.1.0 - watching address:", addr2watch)
+  check_balance();
 }
 
 function generate_key() {
