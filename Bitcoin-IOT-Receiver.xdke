@@ -9,71 +9,52 @@
   "iot-tab": {
     "fileStatus": {
       "Bitcoin-IOT-Receiver.xdk": {
-        "previousModTime": 1446304071705,
-        "modified": 1446304071705,
+        "previousModTime": 1446303112840,
+        "modified": 1446303112840,
         "seen": true,
         "name": "Bitcoin-IOT-Receiver.xdk"
       },
       "Bitcoin-IOT-Receiver.xdke": {
-<<<<<<< HEAD
-        "previousModTime": 1446306149562,
-        "modified": 1446306149562,
-=======
-        "previousModTime": 1446304029217,
-        "modified": 1446304029217,
->>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
+        "previousModTime": 1446306530387,
+        "modified": 1446306530387,
         "seen": true,
         "name": "Bitcoin-IOT-Receiver.xdke"
       },
       "icon.png": {
-        "previousModTime": 1446304071720,
-        "modified": 1446304071720,
+        "previousModTime": 1446303112616,
+        "modified": 1446303112616,
         "seen": true,
         "name": "icon.png"
       },
       "main.js": {
-<<<<<<< HEAD
-        "previousModTime": 1446306173745,
-        "modified": 1446306173745,
-=======
-        "previousModTime": 1446304028609,
-        "modified": 1446304028609,
->>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
+        "previousModTime": 1446306591237,
+        "modified": 1446306591237,
         "seen": true,
         "name": "main.js"
       },
       "package.json": {
-        "previousModTime": 1446304071736,
-        "modified": 1446304071736,
+        "previousModTime": 1446303112617,
+        "modified": 1446303112617,
         "seen": true,
         "name": "package.json"
       },
       "README.md": {
-<<<<<<< HEAD
-        "previousModTime": 1446304071720,
-        "modified": 1446304071720,
-=======
         "previousModTime": 1446303628047,
         "modified": 1446303628047,
->>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
         "seen": true,
         "name": "README.md"
       },
       "xdk/project-info.json": {
-        "previousModTime": 1446304071736,
-        "modified": 1446304071736,
+        "previousModTime": 1446303112816,
+        "modified": 1446303112816,
         "seen": true,
         "name": "xdk/project-info.json"
       }
     },
-<<<<<<< HEAD
     "boardFileStatus": {
       "main.js": {
-        "previousModTime": 1446306175498
+        "previousModTime": 1446306594498
       }
     }
-=======
-    "boardFileStatus": {}
->>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
   }
 }

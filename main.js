@@ -59,19 +59,14 @@ var main = function() {
   
   var lcd = require('jsupm_i2clcd');
   var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
-<<<<<<< HEAD
+
   display.setCursor(0,0);
   display.write('hi there');
     
   var public_key = generate_key();
   
   console.log("BitEdison initialized - v0.1.0 - watching address:", public_key)
-  check_balance(public_key);      
-=======
-  display.setCursor(0, 0);
-  display.write('hi there');
->>>>>>> 30653a28b6b749374d6505b1db24b3a900a6580e
-  
+  check_balance(public_key);
 }
 
 function generate_key()
