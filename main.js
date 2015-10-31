@@ -55,6 +55,13 @@ var main = function() {
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
   
   console.log("BitEdison initialized - v0.1.0 - watching address:", addr2watch)
+  
+  var lcd = require('jsupm_i2clcd');
+  var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
+  display.setCursor(1, 1);
+  display.write('hi there');
+  display.setCursor(0,0);
+  
   check_balance()
 }
 
