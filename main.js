@@ -8,6 +8,7 @@ var _       = require('underscore')    // docs: http://underscorejs.org/
 var bitcoin = require('bitcoinjs-lib')
 var fs =      require('fs');
 var qr = require('qr-image'); 
+var Simplify = require("simplify-commerce")
 
 var addr2watch
 var ipAddress = '172.16.10.205 '; 
@@ -44,7 +45,7 @@ var check_balance = function(){
       // this is the simplest approach, just check if the balance if different
       // you could check if the price is increased by X amount or better if you got a transaction exactly of x btc
       if (balance && balance != btc) {
-        payment_received()
+        payment_received(btc-balance)
         return
       }
       
@@ -74,6 +75,31 @@ var check_balance = function(){
 
 var payment_received = function() {
   console.log("Address balance changed, new one is:", balance, "BTC")
+  
+    client = Simplify.getClient({
+        publicKey: 'sbpb_Mzg0MGRkYWEtNjdlOS00ZmE0LTg0ZGQtYzA3MjY2OTkwMzc4',
+        privateKey: 'KVMH73QW6/rSrK+OvqGaTBsb8CdFXfwceB7f+FjObP95YFFQL0ODSXAOkNtXTToq'
+    });
+    
+    client.payment.create({
+        amount : 207,
+        description : "Bitcoin payment",
+        card : {
+           expMonth : "11",
+           expYear : "19",
+           cvc : "123",
+           number : "5555555555554444"
+        },
+        currency : "GBP"
+    }, function(errData, data){
+        if(errData){
+            console.error("Error Message: " + errData.data.error.message);
+            // handle the error
+            return;
+        }
+        console.log("Payment Status: " + data.paymentStatus);
+    });
+  
   payed = true
 }
 
@@ -109,7 +135,8 @@ var main = function() {
   console.log('MRAA Version: ' + mraa.getVersion());
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
-
+    
+    
     //start web server
     init_server();
     start_server();
