@@ -130,13 +130,10 @@ function generate_key() {
     var pub = keyPair.getAddress();
     var priv = keyPair.toWIF();
     
-    
-    
     fs.appendFile("/bitcoin/"+pub, priv, function (err) {
       if (err) return console.log(err);
       console.log('saved sucessfully');
     });
-    
     
     return pub;
 }
@@ -146,8 +143,6 @@ var main = function() {
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
     
-    
-    //start web server
     initialise_receiver(0.001);
     init_server();
     start_server();
