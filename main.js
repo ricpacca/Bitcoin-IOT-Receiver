@@ -139,8 +139,8 @@ function init_server()
         }
         else if(req.url.indexOf("address.png") != -1)
         {
-            res.write(200 , {'Content-Type' : 'image/x-png'});
-            res.end(addressPicture);
+            res.writeHead(200 , {'Content-Type' : 'image/x-png'});
+            res.write(addressPicture);
         }
         
         else if(req.url.indexOf('payment') != -1){
