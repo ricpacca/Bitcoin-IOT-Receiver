@@ -31,7 +31,8 @@ var i = 0
 
 var requestPaymentPage = fs.readFileSync('/home/root/request.html');
 var waitingForPayment  = fs.readFileSync('/home/root/waiting.html');
-var addressPicture            = fs.readFileSync('/opt/xdk-daemon/address.png')
+var addressPicture     = fs.readFileSync('/opt/xdk-daemon/address.png')
+
 
 
 var check_balance = function(){
