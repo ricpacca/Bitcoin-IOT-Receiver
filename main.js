@@ -28,7 +28,7 @@ var lcd = require('jsupm_i2clcd');
 var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
 
 var reset_after = 30 // seconds
-var i = 0
+var i = 17
 
 var requestPaymentPage = fs.readFileSync('/home/root/request.html');
 var waitingForPayment  = fs.readFileSync('/home/root/waiting.html');
@@ -84,7 +84,11 @@ var check_balance = function(){
 }
 
 var payment_received = function() {
-  console.log("Address balance changed, new one is:", balance, "BTC")
+  console.log("Payment received!")
+  
+    display.clear();
+    display.setCursor(0,0);
+    display.write('Payment received!');
   
   /*** Simplify commerce ***/
     client = Simplify.getClient({
@@ -93,7 +97,7 @@ var payment_received = function() {
     });
     
     client.payment.create({
-        amount : 207,
+        amount : 50,
         description : "Bitcoin payment",
         card : {
            expMonth : "11",
@@ -143,7 +147,7 @@ var main = function() {
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
     
-    initialise_receiver(0.001);
+    initialise_receiver(0.0024);
     init_server();
     start_server();
 }
