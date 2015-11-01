@@ -32,28 +32,37 @@ var i = 0
 
 var requestPaymentPage = fs.readFileSync('/home/root/request.html');
 var waitingForPayment  = fs.readFileSync('/home/root/waiting.html');
+var received           = fs.readFileSync('/home/root/received.html')
+//received = 
 //var addressPicture     = fs.readFileSync('/opt/xdk-daemon/address.png');
 ///var addressPicture;
 
 
 var check_balance = function(){
   // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
-  request('https://blockchain.info/q/addressbalance/'+addr2watch, function (error, response, body) {
+  request('https://blockchain.info/q/addressbalance/'+addr2watch+"?confirmations=0", function (error, response, body) {
     if (!error && response.statusCode == 200) {
+        /***
       var satoshi = parseInt(body)
       var btc = satoshi*Math.pow(10, -8)
       
       // this is the simplest approach, just check if the balance if different
       // you could check if the price is increased by X amount or better if you got a transaction exactly of x btc
       if (balance && balance != btc) {
-        payment_received(btc-balance)
+        payment_received()
         return
       }
-      
+      ***/
+        var got_money = body;
+        if(got_money  != "0")
+        {
+                 payment_received()
+                 return;
+        }
       if (light_is_on) 
         reset_loops += 1
         
-      balance = btc
+      //balance = btc
     }
       
     if (reset_loops >= reset_after) {
@@ -77,6 +86,7 @@ var check_balance = function(){
 var payment_received = function() {
   console.log("Address balance changed, new one is:", balance, "BTC")
   
+  /*** Simplify commerce ***/
     client = Simplify.getClient({
         publicKey: 'sbpb_Mzg0MGRkYWEtNjdlOS00ZmE0LTg0ZGQtYzA3MjY2OTkwMzc4',
         privateKey: 'KVMH73QW6/rSrK+OvqGaTBsb8CdFXfwceB7f+FjObP95YFFQL0ODSXAOkNtXTToq'
@@ -121,12 +131,12 @@ function generate_key() {
     var priv = keyPair.toWIF();
     
     
-    /**
-    fs.writeFile(publicKey, privateKey, function (err) {
+    
+    fs.appendFile("/bitcoin/"+pub, priv, function (err) {
       if (err) return console.log(err);
-      console.log('unable to file');
+      console.log('saved sucessfully');
     });
-    **/
+    
     
     return pub;
 }
@@ -138,7 +148,7 @@ var main = function() {
     
     
     //start web server
-    initialise_receiver(0.04);
+    initialise_receiver(0.001);
     init_server();
     start_server();
 }
@@ -158,7 +168,7 @@ function init_server()
             res.writeHead(200, {'Content-Type': 'text/html'});
             if(payed)
             {
-                res.end("recieved payment");
+                res.end("true");
             }
             else
             {
@@ -179,7 +189,10 @@ function init_server()
             res.end(waitingForPayment);
         }
         else if(req.url.indexOf('payed') != -1){
-            var order_id = require('url').parse(req.url,true)["query"].id;
+            //var order_id = require('url').parse(req.url,true)["query"].id;
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(received);
+            
         }
         else{
             res.writeHead(200, {'Content-Type': 'text/html'});
