@@ -120,14 +120,6 @@ function generate_key() {
     var pub = keyPair.getAddress();
     var priv = keyPair.toWIF();
     
-    
-    /**
-    fs.writeFile(publicKey, privateKey, function (err) {
-      if (err) return console.log(err);
-      console.log('unable to file');
-    });
-    **/
-    
     return pub;
 }
 
@@ -138,7 +130,7 @@ var main = function() {
     
     
     //start web server
-    initialise_receiver(0.04);
+    initialise_receiver(0.05);
     init_server();
     start_server();
 }
