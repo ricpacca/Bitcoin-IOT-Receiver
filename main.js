@@ -21,6 +21,8 @@ var relayPin    = new mraa.Gpio(12)
 var reset_loops = 0
 var light_is_on = false
 
+var payed = false
+
 var lcd = require('jsupm_i2clcd');
 var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
 
@@ -70,11 +72,13 @@ var check_balance = function(){
 
 var payment_received = function() {
   console.log("Address balance changed, new one is:", balance, "BTC")
+  payed = true
 }
 
 function initialise_receiver() {
+    payed = false
     addr2watch = generate_key();
-
+    
     var code = qr.image(addr2watch, { type: 'png' });  
     var output = fs.createWriteStream('address.png');
     code.pipe(output);
@@ -107,42 +111,41 @@ var main = function() {
     //start web server
     init_server();
     start_server();
-  initialise_receiver();
 }
 
 function init_server()
 {
     server = http.createServer(function (req, res) {
-    var value;
-    // This is a very quick and dirty way of detecting a request for the page
-    // versus a request for light values
-    if(req.url.indexOf('request') != -1){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(requestPaymentPage);    
-    }
-    else if(req.url.indexOf("chkpyd") != -1)
-    {
+        var value;
+        // This is a very quick and dirty way of detecting a request for the page
+        // versus a request for light values
+        if(req.url.indexOf('request') != -1){
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(requestPaymentPage);    
+        }
+        else if(req.url.indexOf("chkpyd") != -1)
+        {
             res.writeHead(200, {'Content-Type': 'text/html'});
             while(true)
             {
                 res.end("true");
             }
         }
-    else if(req.url.indexOf('payment') != -1){
-        var amount = res.getHeader("value_input");
-        //var currency = res.getHeader("value_input");
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(waitingForPayment);    
-    }
+        else if(req.url.indexOf('payment') != -1){
+            var amount = res.getHeader("value_input");
+            initialise_receiver();
+            //var currency = res.getHeader("value_input");
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(waitingForPayment);
+        }
         else if(req.url.indexOf('payed') != -1){
             var order_id = require('url').parse(req.url,true)["query"].id;
-            
         }
-            else{
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end("shit");
-    }
-});
+        else{
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end("shit");
+        }
+    });
 }
 
 function start_server()
@@ -153,10 +156,6 @@ function start_server()
 
 
 //lightSensorPage = String(lightSensorPage).replace(/<<ipAddress>>/, ipAddress);
-
-
-
-
 
 
 main()
