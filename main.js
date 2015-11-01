@@ -30,7 +30,9 @@ var reset_after = 30 // seconds
 var i = 0
 
 var requestPaymentPage = fs.readFileSync('/home/root/request.html');
-var waitingForPayment = fs.readFileSync('/home/root/waiting.html');
+var waitingForPayment  = fs.readFileSync('/home/root/waiting.html');
+var addressPicture            = fs.readFileSync('/opt/xdk-daemon/address.png')
+
 
 var check_balance = function(){
   // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
@@ -126,11 +128,21 @@ function init_server()
         else if(req.url.indexOf("chkpyd") != -1)
         {
             res.writeHead(200, {'Content-Type': 'text/html'});
-            while(true)
+            if(payed)
             {
-                res.end("true");
+                res.end("recieved payment");
+            }
+            else
+            {
+                res.end("false");
             }
         }
+        else if(req.url.indexOf("address.png") != -1)
+        {
+            res.write(200 , {'Content-Type' : 'image/x-png'});
+            res.end(addressPicture);
+        }
+        
         else if(req.url.indexOf('payment') != -1){
             var amount = res.getHeader("value_input");
             initialise_receiver();
