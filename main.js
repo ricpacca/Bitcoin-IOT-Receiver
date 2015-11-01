@@ -31,8 +31,8 @@ var i = 0
 
 var requestPaymentPage = fs.readFileSync('/home/root/request.html');
 var waitingForPayment  = fs.readFileSync('/home/root/waiting.html');
-var addressPicture     = fs.readFileSync('/opt/xdk-daemon/address.png')
-
+//var addressPicture     = fs.readFileSync('/opt/xdk-daemon/address.png');
+///var addressPicture;
 
 
 var check_balance = function(){
@@ -82,11 +82,10 @@ function initialise_receiver() {
     payed = false
     addr2watch = generate_key();
     
-    var code = qr.image(addr2watch, { type: 'png' });  
+    var code = qr.image("bitcoin:" + addr2watch + "?amount=" + arguments[0], { type: 'png' });  
     var output = fs.createWriteStream('address.png');
     code.pipe(output);
-    
-    console.log("Watching address:", addr2watch);
+    console.log("Watching address:", "bitcoin:" + addr2watch + "?amount=" + arguments[0]);
     check_balance();
 }
 
@@ -112,6 +111,7 @@ var main = function() {
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
 
     //start web server
+    initialise_receiver(0.04);
     init_server();
     start_server();
 }
@@ -140,13 +140,13 @@ function init_server()
         }
         else if(req.url.indexOf("address.png") != -1)
         {
+            addressPicture = fs.readFileSync('/opt/xdk-daemon/address.png');
             res.writeHead(200 , {'Content-Type' : 'image/x-png'});
-            res.write(addressPicture);
+            res.end(addressPicture);
         }
         
         else if(req.url.indexOf('payment') != -1){
             var amount = res.getHeader("value_input");
-            initialise_receiver();
             //var currency = res.getHeader("value_input");
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(waitingForPayment);
