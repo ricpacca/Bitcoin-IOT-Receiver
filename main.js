@@ -10,8 +10,10 @@ var fs =      require('fs');
 var qr = require('qr-image'); 
 
 var addr2watch
-
-
+var ipAddress = '172.16.10.205 '; 
+var server;
+var http = require('http');
+var dict = {};
 //var addr2watch  = '1PzTDHe2GKjv2sHHKoN4Gbu2njLtekkYHh' // bitcoin address to watch 
 var loop_time   = 1000  // ms   (check every second)
 var balance     = null
@@ -24,6 +26,9 @@ var display = new lcd.Jhd1313m1(0, 0x3E, 0x62);
 
 var reset_after = 30 // seconds
 var i = 0
+
+var requestPaymentPage = fs.readFileSync('/home/root/request.html');
+var waitingForPayment = fs.readFileSync('/home/root/waiting.html');
 
 var check_balance = function(){
   // this version uses blockchain.info direct api - but I could've used blockr.io, blockcypher, etc... prefer the ones that don't require an access keys
@@ -99,7 +104,59 @@ var main = function() {
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
 
+    //start web server
+    init_server();
+    start_server();
   initialise_receiver();
 }
+
+function init_server()
+{
+    server = http.createServer(function (req, res) {
+    var value;
+    // This is a very quick and dirty way of detecting a request for the page
+    // versus a request for light values
+    if(req.url.indexOf('request') != -1){
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.end(requestPaymentPage);    
+    }
+    else if(req.url.indexOf("chkpyd") != -1)
+    {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            while(true)
+            {
+                res.end("true");
+            }
+        }
+    else if(req.url.indexOf('payment') != -1){
+        var amount = res.getHeader("value_input");
+        //var currency = res.getHeader("value_input");
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.end(waitingForPayment);    
+    }
+        else if(req.url.indexOf('payed') != -1){
+            var order_id = require('url').parse(req.url,true)["query"].id;
+            
+        }
+            else{
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.end("shit");
+    }
+});
+}
+
+function start_server()
+{
+    server.listen(1337, ipAddress);
+    console.log("Server Started");
+}
+
+
+//lightSensorPage = String(lightSensorPage).replace(/<<ipAddress>>/, ipAddress);
+
+
+
+
+
 
 main()
