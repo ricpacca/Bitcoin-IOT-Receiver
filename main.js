@@ -45,7 +45,7 @@ var check_balance = function(){
         /***
       var satoshi = parseInt(body)
       var btc = satoshi*Math.pow(10, -8)
-      
+
       // this is the simplest approach, just check if the balance if different
       // you could check if the price is increased by X amount or better if you got a transaction exactly of x btc
       if (balance && balance != btc) {
@@ -61,41 +61,43 @@ var check_balance = function(){
         }
       if (light_is_on) 
         reset_loops += 1
-        
+
       //balance = btc
     }
-      
+
     if (reset_loops >= reset_after) {
       reset_loops = 0;
       relayPin.write(1);
       light_is_on = false;
     }
-    
+
     if (i==17) {
         i=0;
         display.clear();
     }
-      
+
     display.setCursor(0,i++);
     display.write('-');
-      
+
     _.delay(check_balance, loop_time) // this is like setTimeout(check_balance, loop_Time)
   })
 }
 
 var payment_received = function() {
   console.log("Payment received!")
-  
+
     display.clear();
     display.setCursor(0,0);
     display.write('Payment received!');
-  
+
+    var array = fs.readFileSync('api-keys.txt').toString().split("\r\n");
+
   /*** Simplify commerce ***/
     client = Simplify.getClient({
-        publicKey: 'sbpb_Mzg0MGRkYWEtNjdlOS00ZmE0LTg0ZGQtYzA3MjY2OTkwMzc4',
-        privateKey: 'KVMH73QW6/rSrK+OvqGaTBsb8CdFXfwceB7f+FjObP95YFFQL0ODSXAOkNtXTToq'
+        publicKey: array[0],
+        privateKey: array[1]
     });
-    
+
     client.payment.create({
         amount : 50,
         description : "Bitcoin payment",
@@ -114,14 +116,14 @@ var payment_received = function() {
         }
         console.log("Payment Status: " + data.paymentStatus);
     });
-  
+
   payed = true
 }
 
 function initialise_receiver() {
     payed = false
     addr2watch = generate_key();
-    
+
     var code = qr.image("bitcoin:" + addr2watch + "?amount=" + arguments[0], { type: 'png' });  
     var output = fs.createWriteStream('address.png');
     code.pipe(output);
@@ -133,12 +135,12 @@ function generate_key() {
     var keyPair = bitcoin.ECPair.makeRandom()
     var pub = keyPair.getAddress();
     var priv = keyPair.toWIF();
-    
+
     fs.appendFile("/bitcoin/"+pub, priv, function (err) {
       if (err) return console.log(err);
       console.log('saved sucessfully');
     });
-    
+
     return pub;
 }
 
@@ -146,7 +148,9 @@ var main = function() {
   console.log('MRAA Version: ' + mraa.getVersion());
   relayPin.dir(mraa.DIR_OUT);
   relayPin.write(1);  // I have my relay as normally closed (NC). otherwise, if it's normally open (NO) you have to invert the 0 and 1 in all the .write() calls
-    
+
+    var array = fs.readFileSync('api-keys.txt').toString().split("\r\n");
+
     initialise_receiver(0.0024);
     init_server();
     start_server();
@@ -164,6 +168,7 @@ function init_server()
         }
         else if(req.url.indexOf("chkpyd") != -1)
         {
+
             res.writeHead(200, {'Content-Type': 'text/html'});
             if(payed)
             {
@@ -180,7 +185,7 @@ function init_server()
             res.writeHead(200 , {'Content-Type' : 'image/x-png'});
             res.end(addressPicture);
         }
-        
+
         else if(req.url.indexOf('payment') != -1){
             var amount = res.getHeader("value_input");
             //var currency = res.getHeader("value_input");
@@ -191,7 +196,7 @@ function init_server()
             //var order_id = require('url').parse(req.url,true)["query"].id;
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(received);
-            
+
         }
         else{
             res.writeHead(200, {'Content-Type': 'text/html'});
