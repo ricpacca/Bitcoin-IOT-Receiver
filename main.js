@@ -186,7 +186,8 @@ function init_server()
         else if(req.url.indexOf('payed') != -1){
             //var order_id = require('url').parse(req.url,true)["query"].id;
             res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(received);
+            received_final = String(received).replace(/<<<<<<address>>>>>>/,addr2watch);
+            res.end(received_final);
             
         }
         else{
