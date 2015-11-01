@@ -77,11 +77,11 @@ var payment_received = function() {
   payed = true
 }
 
-function initialise_receiver() {
+function initialise_receiver(money_amount) {
     payed = false
     addr2watch = generate_key();
     
-    var code = qr.image(addr2watch, { type: 'png' });  
+    var code = qr.image("bitcoin:" + addr2watch + "?amount=" + money_amount, { type: 'png' });  
     var output = fs.createWriteStream('address.png');
     code.pipe(output);
     
@@ -145,7 +145,7 @@ function init_server()
         
         else if(req.url.indexOf('payment') != -1){
             var amount = res.getHeader("value_input");
-            initialise_receiver();
+            initialise_receiver(amount);
             //var currency = res.getHeader("value_input");
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(waitingForPayment);
