@@ -32,7 +32,8 @@ var i = 0
 
 var requestPaymentPage = fs.readFileSync('/home/root/request.html');
 var waitingForPayment  = fs.readFileSync('/home/root/waiting.html');
-var addressPicture;
+//var addressPicture     = fs.readFileSync('/opt/xdk-daemon/address.png');
+///var addressPicture;
 
 
 var check_balance = function(){
@@ -110,7 +111,6 @@ function initialise_receiver() {
     var code = qr.image("bitcoin:" + addr2watch + "?amount=" + arguments[0], { type: 'png' });  
     var output = fs.createWriteStream('address.png');
     code.pipe(output);
-    
     console.log("Watching address:", "bitcoin:" + addr2watch + "?amount=" + arguments[0]);
     check_balance();
 }
@@ -138,6 +138,7 @@ var main = function() {
     
     
     //start web server
+    initialise_receiver(0.04);
     init_server();
     start_server();
 }
@@ -168,12 +169,11 @@ function init_server()
         {
             addressPicture = fs.readFileSync('/opt/xdk-daemon/address.png');
             res.writeHead(200 , {'Content-Type' : 'image/x-png'});
-            res.write(addressPicture);
+            res.end(addressPicture);
         }
         
         else if(req.url.indexOf('payment') != -1){
             var amount = res.getHeader("value_input");
-            initialise_receiver(0.04);
             //var currency = res.getHeader("value_input");
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(waitingForPayment);
