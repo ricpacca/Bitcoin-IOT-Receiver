@@ -1,5 +1,10 @@
 Bitcoin-IOT-Receiver
 ============================
+
+FinTechathon Project
+31 October - 1 November 2015
+London, United Kingdom
+
 Technically speaking, it's a web server running on Intel Edison which allows every merchant to easily make a payment request in bitcoin. 
 When the merchant enters an amount (in £) and clicks on "make payment", a qr code with the public key of a bitcoin address is generated to allow the customer make the payment easily (with blockchain app for example).
 The server then checks for some time if the payment was made, and if he finds that it was, it prints "payment received" on the Edison screen and opens a webpage with the details of the transaction on BlockChain.
